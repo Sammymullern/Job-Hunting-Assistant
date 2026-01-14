@@ -1,59 +1,188 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<h1 align="center">Job Hunting Assistant</h1>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Job Hunting Assistant is a web application that helps IT professionals **organize and automate their job search**. It is built with **Laravel (PHP)** and focuses on:
 
-## About Laravel
+- **Job aggregation** from multiple platforms.
+- **CV & job matching** based on skills and keywords.
+- **Application tracking** with statuses and follow-up reminders.
+- **Skill gap analysis** and learning recommendations.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This README explains what the project does, how it is structured, and how to run it locally while you continue developing and pushing to GitHub.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 1. Features & Modules
 
-## Learning Laravel
+- **Job Aggregation Module**
+  - Collects job listings from platforms like LinkedIn, Indeed, BrighterMonday, and company career pages (initially can be manual entry, then automated).
+  - Filters jobs by role, location, and keywords.
+  - Uses scheduled background jobs (cron + Laravel scheduler) to refresh listings.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **CV & Job Matching Engine**
+  - Allows users to upload their CV.
+  - Extracts keywords/skills from the CV and compares them with job descriptions.
+  - Produces a **match score** and lists missing or weak skills.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Application Tracking System (ATS)**
+  - Users can record each application (company, role, source, date, status).
+  - Tracks status changes (planned, applied, interview, offer, rejected, accepted).
+  - Supports follow-up reminders and personal notes.
 
-## Laravel Sponsors
+- **Skill Gap Analyzer**
+  - Analyzes skills requested across many job posts.
+  - Compares them against the user profile/CV.
+  - Highlights missing/weak skills and suggests possible learning resources.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Notification & Alerts Module**
+  - Sends alerts for new job matches.
+  - Reminds users about follow-ups and interviews.
+  - Uses email (and optionally messaging platforms) via Laravel's notification system.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 2. Technology Stack
 
-## Contributing
+- **Backend:** PHP 8+ / Laravel 12
+- **Frontend:** Blade templates, HTML, CSS, JavaScript
+- **Database:** SQLite by default (can be switched to MySQL or PostgreSQL via `.env`)
+- **Background Jobs:** Laravel scheduler + cron
+- **Optional Scraping Services:** Python (Scrapy / BeautifulSoup) via HTTP APIs
+- **Version Control:** Git + GitHub
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 3. Project Structure (High Level)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Key Laravel directories used in this project:
 
-## Security Vulnerabilities
+- `app/`
+  - `Http/Controllers/` – controllers for job listings, applications, profiles, etc.
+  - `Models/` – Eloquent models for `User`, `Job`, `Application`, etc.
+- `database/migrations/` – database schema definitions.
+- `resources/views/` – Blade templates for pages (dashboard, job list, application list).
+- `routes/web.php` – web routes for UI pages.
+- `routes/console.php` – scheduled commands for job aggregation and notifications.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+As the project evolves, you will see modules corresponding to:
 
-## License
+- **Job Aggregation** – commands + services to fetch and normalize jobs.
+- **CV Matching** – services to parse CV text and compute match scores.
+- **ATS** – controllers/views for managing applications.
+- **Skill Gap Analysis** – services that analyze skills frequency.
+- **Notifications** – mailables/notifications and scheduled jobs.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 4. Getting Started (Local Development)
+
+### 4.1 Prerequisites
+
+- PHP 8.2+
+- Composer
+- Node.js + npm (for frontend assets)
+- Git
+
+### 4.2 Clone the Repository
+
+```bash
+git clone https://github.com/Sammymullern/Job-Hunting-Assistant.git
+cd Job-Hunting-Assistant
+```
+
+### 4.3 Install PHP Dependencies
+
+```bash
+composer install
+```
+
+### 4.4 Environment Setup
+
+Copy the example environment file and generate an app key:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+By default, Laravel in this project will work with an **SQLite** database for quick local development. You can change this later to MySQL/PostgreSQL in `.env`.
+
+If you want to keep SQLite:
+
+- Ensure `database/database.sqlite` exists (Laravel's post-create script usually creates it).
+- In `.env`, set:
+
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/your/project/database/database.sqlite
+```
+
+Then run migrations:
+
+```bash
+php artisan migrate
+```
+
+If you prefer MySQL/PostgreSQL, update the `DB_*` settings in `.env` and run migrations against that database.
+
+### 4.5 Install Frontend Dependencies
+
+```bash
+npm install
+npm run dev
+```
+
+### 4.6 Run the Application
+
+```bash
+php artisan serve
+```
+
+Visit `http://127.0.0.1:8000` in your browser. You should see the Laravel welcome page (which will later be replaced by the Job Hunting Assistant UI).
+
+---
+
+## 5. Development Workflow
+
+- **Branching (optional but recommended):**
+  - Work on feature branches like `feature/ats`, `feature/job-aggregation`.
+- **Basic Git workflow:**
+  - `git status` – check changes.
+  - `git add .` – stage changes.
+  - `git commit -m "Describe your change"` – commit.
+  - `git push` – push to GitHub.
+
+You already have the project connected to:
+
+```text
+origin  https://github.com/Sammymullern/Job-Hunting-Assistant.git
+```
+
+Any updates you make locally can be shared by committing and pushing.
+
+---
+
+## 6. Roadmap (Phases)
+
+- **Phase 1 – Core Tracker & Manual Jobs**
+  - User authentication (login/register).
+  - Manual job entry.
+  - Application tracking (status, notes, follow-ups).
+
+- **Phase 2 – Automation & Matching**
+  - Automated job aggregation (APIs or scraping services).
+  - CV upload and parsing.
+  - CV ↔ job keyword matching with scores.
+
+- **Phase 3 – Insights & Alerts**
+  - Skill gap analysis and recommendations.
+  - Notification and alert system (email, optional messaging).
+  - Dashboard with charts and metrics.
+
+This README will evolve as these phases are implemented in the codebase.
+
+---
+
+## 7. License
+
+This project is currently based on the Laravel framework, which is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
